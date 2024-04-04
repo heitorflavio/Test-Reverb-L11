@@ -11,7 +11,7 @@ class StoreAppointmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,33 @@ class StoreAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'start' => ['required', 'date'],
+            'end' => ['required', 'date'],
+            // 'start' => ['required'],
+            // 'end' => ['required'],
+            'calendar_id' => ['required', 'exists:calendars,id'],
+            'status' => ['required', 'string'],
+            'color' => ['required', 'string'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'The title field is required.',
+            'description.required' => 'The description field is required.',
+            'start.required' => 'The start field is required.',
+            'end.required' => 'The end field is required.',
+            'calendar_id.required' => 'The calendar field is required.',
+            'status.required' => 'The status field is required.',
+            'color.required' => 'The color field is required.',
         ];
     }
 }

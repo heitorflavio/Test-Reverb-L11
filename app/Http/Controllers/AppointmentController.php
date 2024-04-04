@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
+use Illuminate\Http\Request;
 use App\Models\Appointment;
+use Illuminate\Support\Facades\Log;
+use App\Events\UpdateCalendar;
 
 class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $appointments = Appointment::all();
+        $data = $request->all();
+        if (isset($data['calendar_id'])) {
+            $appointments = Appointment::where('calendar_id', $data['calendar_id'])->get();
+        }
+        else {
+            $appointments = Appointment::all();
+        }
         return response()->json($appointments);
     }
 
@@ -30,7 +39,10 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        //
+        $data = $request->validated();
+        $appointment = Appointment::create($data);
+        event(new UpdateCalendar($appointment));
+        return response()->json(['message' => 'Appointment created successfully']);
     }
 
     /**
@@ -54,7 +66,14 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        
+        $data = $request->validated();
+        $data['start'] = date('Y-m-d H:i:s', strtotime($data['start']));
+        $data['end'] = date('Y-m-d H:i:s', strtotime($data['end']));
+        $appointment->update($data);
+
+        event(new UpdateCalendar($appointment));
+       
+        return response()->json(['message' => 'Appointment updated successfully']);
     }
 
     /**
@@ -62,6 +81,8 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        //
+        event(new UpdateCalendar($appointment));
+        $appointment->delete();
+        return response()->json(['message' => 'Appointment deleted successfully']);
     }
 }

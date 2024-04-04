@@ -6,7 +6,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::controller(App\Http\Controllers\CalendarController::class)->group(function () {
         Route::group(['prefix' => 'calendar'],  function () {
-                Route::get('/', 'index')->name('calendar.index');
+                Route::get('/', 'calendar')->name('calendar.calendar');
+                Route::get('/list', 'index')->name('calendar.index');
                 Route::get('create', 'create')->name('calendar.create');
                 Route::post('store', 'store')->name('calendar.store');
                 Route::get('edit/{id}', 'edit')->name('calendar.edit');
@@ -21,8 +22,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('create', 'create')->name('appointment.create');
             Route::post('store', 'store')->name('appointment.store');
             Route::get('edit/{id}', 'edit')->name('appointment.edit');
-            Route::post('update/{id}', 'update')->name('appointment.update');
-            Route::get('delete/{id}', 'delete')->name('appointment.delete');
+            Route::put('update/{appointment}', 'update')->name('appointment.update');
+            Route::delete('delete/{appointment}', 'destroy')->name('appointment.delete');
         });
     });
 });

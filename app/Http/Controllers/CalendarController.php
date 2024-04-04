@@ -75,4 +75,12 @@ class CalendarController extends Controller
         $calendar->delete();
         return redirect()->back();
     }
+
+    public function calendar()
+    {
+        $calendars = Calendar::with('appointments')->get();
+        return Inertia::render('Calendars/Calendar', [
+            'calendars' => $calendars,
+        ]);
+    }
 }

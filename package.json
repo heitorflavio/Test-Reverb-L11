@@ -26,6 +26,8 @@
         "@fullcalendar/interaction": "^6.1.11",
         "@fullcalendar/list": "^6.1.11",
         "@fullcalendar/timegrid": "^6.1.11",
-        "@fullcalendar/vue3": "^6.1.11"
+        "@fullcalendar/vue3": "^6.1.11",
+        "flatpickr": "^4.6.13",
+        "sweetalert2": "^11.10.7"
     }
 }
